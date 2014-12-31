@@ -49,9 +49,9 @@ return array(
 		'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => '127.0.0.1',
-			'database'  => 'rovertow_main_dev',
-			'username'  => 'rovertow_main',
-			'password'  => 'YRUg-34agjr6',
+			'database'  => 'rovertow_main2',
+			'username'  => 'root',
+			'password'  => 'password',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
