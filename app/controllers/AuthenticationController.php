@@ -7,20 +7,45 @@ class AuthenticationController extends BaseController {
 		$email = Input::get('email');
 		$password = Input::get('password');
 
-		if (Auth::attempt(array('email' => $email, 'password' => $password))) {
-			$responseCode = 200;
-			$content = $this->generateToken(Auth::id());
+		$count = Owner::where('email', $email)->count();
+		$owner = Owner::where('email', $email)->firstOrFail();
+
+		$content = array(	'responseCode' => '',
+							'responseStatus' => '',
+							'errors' => [],
+						);
+
+		if ($count != 1) {
+
+			$responseCode = 409;
+			$responseStatus = 'Multiple users found with credentials';
 
 		} else {
-			$responseCode = 401;
-			if ($email == "") {
-				$content = 'Bad credentials';
+			if ($owner->password == $password) {
+				
+				$responseCode = 200;
+				$responseStatus = 'OK';
+
+				$id = $owner->id;
+				$authentication = $this->generateToken($id);
+			
+			} else {
+			
+				$responseCode = 401;
+				$responseStatus = 'Bad credentials';
+			
 			}
 		}
 
-		$response = Response::make("banana", $responseCode);
+		$content['responseCode'] = $responseCode;
+		$content['responseStatus'] = $responseStatus;
+
+		if (isset($authentication)) { $content['authentication'] = $authentication; }
+
+		$response = Response::make($content, $responseCode);
 
 		return $response;
+		
 	}
 
 	private function generateToken($userID) {
@@ -32,13 +57,13 @@ class AuthenticationController extends BaseController {
 
 		$ownerSession->key = $uuid;
 		$ownerSession->ip = $_SERVER['REMOTE_ADDR'];
-		$ownerSession->created = $expiration;
+		$ownerSession->created = date("Y-m-d H:i:s");
 		$ownerSession->owner_id = $userID;
 
 		$ownerSession->save();
 
 		$token = array(
-				'token' => $uuid,
+				'token' => $uuid->__toString(),
 				'expiration' => $expiration,
 			);
 
