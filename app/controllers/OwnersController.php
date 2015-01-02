@@ -6,7 +6,11 @@ class OwnersController extends SecureController {
 
 		$owner = $this->owner;
 
-		$stores = $this->formatStores();
+		$stores = array();
+
+		foreach ($owner->stores()->get() as $store) {
+			array_push($stores, $store->format());
+		}
 
 		$facebook = array();
 
@@ -25,7 +29,7 @@ class OwnersController extends SecureController {
 				                'opening_flow_status'=>$owner->opening_flow_status,
 				                'phone' => $owner->phone,
 				                'title' => $owner->company_title,
-				                'stores' => $owner->stores()->get(),
+				                'stores' => $stores,
 				                'facebook' => $facebook,
 				                'twitter' => $twitter
 				                )
@@ -35,20 +39,4 @@ class OwnersController extends SecureController {
 
 		return $response;
 	}
-
-	private function formatStores() {
-		$stores = $this->owner->stores()->get();
-
-		$formattedStores = array();
-
-		foreach ($stores as $store) {
-
-			$that = array(	'id' => $store->id,
-							'name' => $store->name,
-							'website' => $store->website
-						)
-
-		}
-	}
-
 }

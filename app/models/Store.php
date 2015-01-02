@@ -17,4 +17,47 @@ class Store extends Eloquent {
 		return $this->belongsToMany('Owners', 'owners_businesses', 'business_id', 'owner_id');
 	}
 
+	public function coordinates() {
+		return $this->belongsTo('Coordinates', 'id', 'business_id');
+	}
+
+	public function beacons() {
+
+		return $this->hasMany('Beacon', 'business_id', 'id');
+
+	}
+
+	public function discounts() {
+
+		return $this->belongsToMany('Discount', 'business_deals', 'business_id', 'deal_id');
+
+	}
+
+	public function format() {
+
+		return array(
+				'id' => $this->id,
+				'name' => $this->name,
+				'phone' => $this->phone,
+				'website' => $this->website,
+				'description' =>  $this->description,
+				'image' => $this->image,
+				'location' => array(
+						'address' => $this->address,
+						'city' => $this->city,
+						'state' => $this->state,
+						'zip' => $this->zip,
+						'latitude' => $this->coordinates()->pluck('lat'),
+						'longitude' => $this->coordinates()->pluck('lon'),
+					),
+				'chain' => array(
+						'id' => $this->chain()->pluck('id'),
+						'name' => $this->chain()->pluck('name'),
+						'image' => 'http://softlaunch.roverlink.com/images/assets/businesslogo.jpg',
+					),
+				'beacons' => $this->beacons()->get(),
+				'discount' => $this->discounts()->get(),
+			);
+	}
+
 }
