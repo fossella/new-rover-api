@@ -10,42 +10,33 @@ class AuthenticationController extends BaseController {
 		$count = Owner::where('email', $email)->count();
 		$owner = Owner::where('email', $email)->firstOrFail();
 
-		$content = array(	'responseCode' => '',
-							'responseStatus' => '',
-							'errors' => [],
-						);
-
 		if ($count != 1) {
 
-			$responseCode = 409;
-			$responseStatus = 'Multiple users found with credentials';
+			App::abort('409', 'Multiple users found with credentials');
 
 		} else {
 			if ($owner->password == $password) {
 				
 				$responseCode = 200;
-				$responseStatus = 'OK';
-
 				$id = $owner->id;
-				$authentication = $this->generateToken($id);
+
+				$content = array(	'responseCode' => 200,
+							'responseStatus' => 'OK',
+							'errors' => [],
+							'authenication' = $this->generateToken($id)
+						);
+
+				$response = Response::make($content, $responseCode);
+
+				return $response;
 			
 			} else {
 			
-				$responseCode = 401;
-				$responseStatus = 'Bad credentials';
+				App::abort('401', 'Bad credentials');
 			
 			}
 		}
-
-		$content['responseCode'] = $responseCode;
-		$content['responseStatus'] = $responseStatus;
-
-		if (isset($authentication)) { $content['authentication'] = $authentication; }
-
-		$response = Response::make($content, $responseCode);
-
-		return $response;
-		
+	
 	}
 
 	private function generateToken($userID) {

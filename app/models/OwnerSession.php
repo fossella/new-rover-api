@@ -6,9 +6,8 @@ class OwnerSession extends Eloquent {
 
 	public $timestamps = false;
 
-	public function user() {
-	
-		return $this->hasOne('User', 'id', 'owner_id');
+	public function owner() {
 
+		return $this->hasOne('Owner', 'id', 'owner_id');
 	}
 }
