@@ -70,18 +70,4 @@ class AuthenticationController extends BaseController {
 		return $token;
 
 	}
-
-	public function authenticateByToken() {
-
-		$token = Request::header('Auth-Token');
-
-		$ownerSession = OwnerSession::where('key', $token)->get();
-
-		if ($ownerSession->count > 1 | $ownerSession->count == 0) {
-			return false;
-		} else {
-			return true;
-		}
-
-	}
 }

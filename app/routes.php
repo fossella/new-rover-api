@@ -16,4 +16,10 @@ Route::get('/', function()
 	return View::make('hello');
 });
 
+
+// Authentication
 Route::post('/authenticate', 'AuthenticationController@authenticate');
+
+// Owners
+
+Route::get('/owners/me/', 'OwnersController@me');
