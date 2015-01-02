@@ -35,6 +35,12 @@ class Store extends Eloquent {
 
 	public function format() {
 
+		$discounts = array();
+
+		foreach ($this->discounts()->get() as $discount) {
+			array_push($discounts, $discount->format());
+		}
+
 		return array(
 				'id' => $this->id,
 				'name' => $this->name,
@@ -56,7 +62,7 @@ class Store extends Eloquent {
 						'image' => 'http://softlaunch.roverlink.com/images/assets/businesslogo.jpg',
 					),
 				'beacons' => $this->beacons()->get(),
-				'discount' => $this->discounts()->get(),
+				'discount' => $discounts,
 			);
 	}
 

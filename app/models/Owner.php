@@ -13,4 +13,9 @@ class Owner extends Eloquent {
 
 	}
 
+	public function socialMediaAccounts() {
+
+		return $this->hasMany('SocialMediaAccount', 'owner_id', 'id');
+	}
+
 }

@@ -12,9 +12,19 @@ class OwnersController extends SecureController {
 			array_push($stores, $store->format());
 		}
 
-		$facebook = array();
+		$facebook = false;
 
-		$twitter = array();
+		$twitter = false;
+
+		foreach ($owner->socialMediaAccounts()->get() as $account) {
+			if ($account->type == 'facebook') {
+				$facebook = $account;
+			}
+
+			if ($account->type == 'twitter') {
+				$twitter = $account;
+			}
+		}
 
 		$content = array(	'responseCode' => '200',
 							'responseStatus' => 'OK',
