@@ -23,3 +23,4 @@ Route::post('/authenticate', 'AuthenticationController@authenticate');
 // Owners
 
 Route::get('/owners/me/', 'OwnersController@me');
+Route::get('/owners/me/paymentReceipts', 'OwnersController@receipts');
